@@ -1,7 +1,7 @@
 {
-  "name": "baitaplon-backend",
+  "name": "bbm-backend",
   "version": "1.0.0",
-  "description": "Backend bai tap lon",
+  "description": "Backend cho he thong quan ly muon sach online (Book Borrowing Manager)",
   "license": "ISC",
   "author": "Nguyen Thanh Vinh Phuc",
   "type": "commonjs",
