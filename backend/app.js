@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const router = require("./app/routes/bbm.routes");
+const router = require("./app/routes/bbm.route");
 const ApiError = require("./app/api-error");
 
 const app = express();
