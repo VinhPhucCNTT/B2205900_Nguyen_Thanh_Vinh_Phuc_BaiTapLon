@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const auth = require("./app/auth/bbm.auth");
 
-// const auth = require("./app/auth/xxx");
 const router = require("./app/routes/bbm.route");
 const adminRouter = require("./app/routes/bbm.route.admin");
 
@@ -11,13 +11,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the book borrow manager!" });
-});
 
-// app.use(auth);
-app.use("/api", router);
-app.use("/api/admin", adminRouter);
+app.post("/login", auth.login);
+app.post("/register", auth.registerUser);
+
+app.use("/api", auth.checkToken, router);
+app.use("/api/admin", auth.checkToken, auth.checkAdmin, adminRouter);
 
 // handle 404 response
 app.use((req, nes, next) => {

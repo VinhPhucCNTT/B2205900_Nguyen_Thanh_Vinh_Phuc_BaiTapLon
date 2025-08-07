@@ -4,9 +4,6 @@ const bbm = require("../controllers/bbm.controller.admin");
 const router = express.Router();
 
 // Admin specific routes
-router.route("/login").post(bbm.loginAdmin);
-router.route("/register").post(bbm.registerAdmin);
-
 router
   .route("/")
   .get(bbm.getAllActiveRequests)
@@ -31,7 +28,7 @@ router
 
 router
   .route("/acc")
-  .get(bbm.listAllAdmins)
+  .get(bbm.listAdmins)
   .put(bbm.createAdmin)
   .post(bbm.updateAdmin)
   .delete(bbm.deleteAdmin);

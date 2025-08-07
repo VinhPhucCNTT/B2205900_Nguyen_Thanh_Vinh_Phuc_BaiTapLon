@@ -4,9 +4,6 @@ const bbm = require("../controllers/bbm.controller");
 const router = express.Router();
 
 // User / general routes
-router.route("/login").post(bbm.loginUser);
-router.route("/register").post(bbm.createUser);
-
 router.route("/book").all(bbm.listBooks);
 
 router

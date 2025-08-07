@@ -2,15 +2,10 @@
 const MongoDB = require("../utils/mongodb.util");
 const ApiError = require("../api-error");
 const BBMService = require("../services/bbm.service");
-const BCrypt = require("bcryptjs");
-
-exports.loginUser = async (req, res, next) => {};
 
 exports.getUserHistory = async (req, res, next) => {};
 
-exports.getActiveUserRequests = async (req, res, next) => {
-  res.send({ message: "getActiveUserRequests handler." });
-};
+exports.getActiveUserRequests = async (req, res, next) => {};
 
 exports.listBooks = async (_req, res, next) => {
   try {

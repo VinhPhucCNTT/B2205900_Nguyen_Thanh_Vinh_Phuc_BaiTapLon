@@ -9,6 +9,7 @@ exports.getAllHistory = async (_req, res, next) => {
   try {
     const bbmService = new BBMService(MongoDB.client);
     const histories = bbmService.getAllHistory();
+    res.send(histories);
   } catch (error) {
     return next(
       new ApiError(400, "An error occured when trying to get history data.")
@@ -18,7 +19,15 @@ exports.getAllHistory = async (_req, res, next) => {
 
 // Get all active requests.
 exports.getAllActiveRequests = async (_req, res, next) => {
-  res.send({ message: "getAllActiveRequests handler." });
+  try {
+    const bbmService = new BBMService(MongoDB.client);
+    const activeRequests = bbmService.getAllWaiting();
+    res.send(activeRequests);
+  } catch (error) {
+    return next(
+      new ApiError(400, "An error occured when trying to get active requests.")
+    );
+  }
 };
 
 //// Request handlers
