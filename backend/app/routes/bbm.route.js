@@ -1,47 +1,20 @@
 const express = require("express");
-const contacts = require("../controllers/contact.controller");
+const bbm = require("../controllers/bbm.controller");
 
 const router = express.Router();
 
 // User / general routes
-router.route("/login").post(contacts.login);
-router.route("/register").post(contacts.createUser);
+router.route("/login").post(bbm.loginUser);
+router.route("/register").post(bbm.createUser);
 
-router.route("/book").all(contacts.findBooks);
+router.route("/book").all(bbm.listBooks);
 
 router
   .route("/request")
-  .post(contacts.createRequest)
-  .delete(contacts.cancelRequest);
+  .get(bbm.getActiveUserRequests)
+  .post(bbm.createRequest)
+  .delete(bbm.cancelRequest);
 
-router.route("/history").all(contacts.listHistory);
+router.route("/history").all(bbm.getUserHistory);
 
-// Admin specific routes
-router
-  .route("/admin")
-  .get(contacts.findRequests)
-  .post(contacts.acceptRequest)
-  .put(contacts.closeRequest)
-  .delete(contacts.cancelRequest);
-
-router.route("/admin/history").all(contacts.listAllHistory);
-
-router
-  .route("/admin/book")
-  .get(contacts.listAllBooks)
-  .post(contacts.updateBook)
-  .delete(contacts.deleteBook);
-
-router
-  .route("/admin/user")
-  .get(contacts.listAllUsers)
-  .put(contacts.createUser)
-  .post(contacts.updateUser)
-  .delete(contacts.deleteUser);
-
-router
-  .route("/admin/acc")
-  .get(contacts.listAllAdmins)
-  .put(contacts.createAdmin)
-  .post(contacts.updateAdmin)
-  .delete(contacts.deleteAdmin);
+module.exports = router;
