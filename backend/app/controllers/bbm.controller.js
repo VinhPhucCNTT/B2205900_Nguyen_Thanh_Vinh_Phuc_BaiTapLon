@@ -18,9 +18,14 @@ exports.createRequest = async (req, res, next) => {
   try {
     const bbmService = new BBMService(MongoDB.client);
 
-    const bookExists = await bbmService.checkBookByID(bookid);
-    if (!bookExists) {
+    const book = await bbmService.getBookById(bookid);
+    if (!book) {
       return next(new ApiError(404, "Book not found."));
+    }
+
+    const activeBorrows = await bbmService.countActiveBorrows(bookid);
+    if (activeBorrows >= book.SOQUYEN) {
+      return next(new ApiError(409, "This book is currently out of stock."));
     }
 
     const activeRequest = await bbmService.findActiveRequest(userId, bookid);

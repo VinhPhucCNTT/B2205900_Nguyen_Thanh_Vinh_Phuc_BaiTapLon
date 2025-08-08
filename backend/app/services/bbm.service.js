@@ -6,7 +6,7 @@ class BBMService {
     this.SACH = client.db().collection("SACH");
     this.NHAXUATBAN = client.db().collection("NHAXUATBAN");
     this.THEODOIMUONSACH = client.db().collection("THEODOIMUONSACH");
-    this.NhanVien = client.db().collection("NhanVien");
+    this.NhanVien = client.db().collection("NHANVIEN");
     this.DOCGIA = client.db().collection("DOCGIA");
   }
 
@@ -28,6 +28,17 @@ class BBMService {
   async checkBookByID(id) {
     const info = await this.SACH.findOne({ _id: new ObjectId(id) });
     return !!info;
+  }
+
+  async getBookById(id) {
+    return await this.SACH.findOne({ _id: new ObjectId(id) });
+  }
+
+  async countActiveBorrows(bookId) {
+    return await this.THEODOIMUONSACH.countDocuments({
+      MaSach: new ObjectId(bookId),
+      NGAYTRA: 0,
+    });
   }
 
   async checkUserByPhone(phone) {
