@@ -1,8 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require("../config/index");
+const config = require("../config/index.js");
 const BBMService = require("../services/bbm.service");
 const ApiError = require("../api-error");
+const MongoDB = require("../utils/mongodb.util");
 
 exports.checkToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -16,12 +17,14 @@ exports.checkToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
+    console.log(err);
     return res.status(403).send("Invalid Token");
   }
 };
 
 exports.checkAdmin = async (req, res, next) => {
-  const isAdmin = await BBMService.checkAdminById(req.user.id);
+  const bbmService = new BBMService(MongoDB.client);
+  const isAdmin = await bbmService.checkAdminByID(req.user.id);
   if (!isAdmin) {
     return res.status(403).send("Access Forbidden.");
   }
@@ -34,13 +37,14 @@ exports.login = async (req, res, next) => {
   const asAdmin = !!req.body?.admin;
 
   try {
+    const bbmService = new BBMService(MongoDB.client);
     const user = asAdmin
-      ? await BBMService.getAdminByPhone(phone)
-      : await BBMService.getUserByPhone(phone);
+      ? await bbmService.getAdminByPhone(phone)
+      : await bbmService.getUserByPhone(phone);
     if (!user) {
       return next(new ApiError(403, "Account does not exist."));
     }
-    const userPass = asAdmin ? user.Password : user.PASSWORD;
+    const userPass = asAdmin ? user.Password : user.MATKHAU;
 
     const isValid = bcrypt.compareSync(password, userPass);
     if (!isValid) {
@@ -52,8 +56,8 @@ exports.login = async (req, res, next) => {
       id: user._id,
     };
 
-    const accessToken = jwt.sign(payload, config.ACCESS_TOKEN_SECRET, {
-      expiresIn: config.ACCESS_TOKEN_EXPIRY,
+    const accessToken = jwt.sign(payload, config.auth.ACCESS_TOKEN_SECRET, {
+      expiresIn: config.auth.ACCESS_TOKEN_EXPIRY,
     });
 
     if (!accessToken) {
@@ -62,6 +66,7 @@ exports.login = async (req, res, next) => {
 
     res.json({ accessToken: accessToken });
   } catch (error) {
+    console.log(error);
     return next(new ApiError(403, "Unknown error when authenticating."));
   }
 };
@@ -73,12 +78,12 @@ exports.createUser = async (req, res, next) => {
 
   try {
     const bbmService = new BBMService(MongoDB.client);
-    if (bbmService.checkUserByPhone(req.body.phone)) {
+    const userExists = await bbmService.checkUserByPhone(req.body.phone);
+    if (userExists) {
       return next(new ApiError(398, "An account already exists."));
     }
-    var result = 0;
     const info = {
-      MATKHAU: bcrypt.hashSync(req.body.pass),
+      MATKHAU: req.body.pass, // Hashing is handled by createNewUser
       DIENTHOAI: req.body?.phone,
       HOLOT: req.body?.firstName,
       TEN: req.body?.lastName,
@@ -86,9 +91,10 @@ exports.createUser = async (req, res, next) => {
       PHAI: req.body?.gender,
       DIACHI: req.body?.address,
     };
-    result = await bbmService.createUser(info);
-    return res.send(result);
+    const newUser = await bbmService.createNewUser(info);
+    return res.send(newUser);
   } catch (error) {
+    console.log(error);
     return next(new ApiError(499, "An error occured while creating the user."));
   }
 };
@@ -100,19 +106,19 @@ exports.createAdmin = async (req, res, next) => {
 
   try {
     const bbmService = new BBMService(MongoDB.client);
-    if (bbmService.getAdminByPhone(req.body.phone)) {
+    const adminExists = await bbmService.checkAdminByPhone(req.body.phone);
+    if (adminExists) {
       return next(new ApiError(398, "An account already exists."));
     }
-    var result = 0;
     const info = {
-      Password: bcrypt.hashSync(req.body.pass),
+      Password: req.body.pass, // Hashing is handled by createNewAdmin
       SoDienThoai: req.body?.phone,
       HoTenNV: req.body?.fullName,
       ChucVu: req.body?.position,
       DiaChi: req.body?.address,
     };
-    result = await bbmService.createAdmin(info);
-    return res.send(result);
+    const newAdmin = await bbmService.createNewAdmin(info);
+    return res.send(newAdmin);
   } catch (error) {
     return next(new ApiError(499, "An error occured while creating the user."));
   }

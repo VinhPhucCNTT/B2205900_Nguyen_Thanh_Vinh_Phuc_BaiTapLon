@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/login", auth.login);
-app.post("/register", auth.registerUser);
+app.post("/register", auth.createUser);
 
 app.use("/api", auth.checkToken, router);
 app.use("/api/admin", auth.checkToken, auth.checkAdmin, adminRouter);
