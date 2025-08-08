@@ -3,10 +3,6 @@ const MongoDB = require("../utils/mongodb.util");
 const ApiError = require("../api-error");
 const BBMService = require("../services/bbm.service");
 
-//IMPLEMENT
-// Create a new borrowing request.
-// Requests are created with the user's id (id field in req.user) and the book's id (bookid field in req)
-// On success, response with the request entry, otherwise call next with ApiError (like below)
 exports.createRequest = async (req, res, next) => {
   const userId = req.user.id;
   const { bookid } = req.body;

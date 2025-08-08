@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/auth";
+const API_URL = "http://localhost:3000/";
 
 class AuthService {
   login(user) {
     return axios
-      .post(API_URL + "/login", {
+      .post(API_URL + "login/", {
         phone: user.phone,
         password: user.password,
         isAdmin: user.isAdmin,

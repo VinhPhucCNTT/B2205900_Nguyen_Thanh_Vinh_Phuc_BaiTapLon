@@ -8,31 +8,14 @@
             <form @submit.prevent="handleLogin">
               <div class="form-group">
                 <label for="phone">Phone Number</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="phone"
-                  v-model="user.phone"
-                  required
-                />
+                <input type="text" class="form-control" id="phone" v-model="user.phone" required />
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  v-model="user.password"
-                  required
-                />
+                <input type="password" class="form-control" id="password" v-model="user.password" required />
               </div>
               <div class="form-group form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="isAdmin"
-                  v-model="user.isAdmin"
-                />
+                <input type="checkbox" class="form-check-input" id="isAdmin" v-model="user.isAdmin" />
                 <label class="form-check-label" for="isAdmin">Login as Admin</label>
               </div>
               <button type="submit" class="btn btn-primary btn-block">Login</button>

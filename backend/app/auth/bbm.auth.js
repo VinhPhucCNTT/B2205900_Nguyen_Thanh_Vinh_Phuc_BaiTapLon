@@ -6,6 +6,7 @@ const ApiError = require("../api-error");
 const MongoDB = require("../utils/mongodb.util");
 
 exports.checkToken = (req, res, next) => {
+  console.log("checktoken called");
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(" ")[1];
   if (!authHeader) {
@@ -42,6 +43,7 @@ exports.login = async (req, res, next) => {
       ? await bbmService.getAdminByPhone(phone)
       : await bbmService.getUserByPhone(phone);
     if (!user) {
+      console.log(asAdmin);
       return next(new ApiError(403, "Account does not exist."));
     }
     const userPass = asAdmin ? user.Password : user.MATKHAU;

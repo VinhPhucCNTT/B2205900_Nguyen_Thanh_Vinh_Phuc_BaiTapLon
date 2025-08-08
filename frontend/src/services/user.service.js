@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = "http://localhost:3000/api/bbm";
+const API_URL = "http://localhost:3000/api/";
 
 class UserService {
   getBooks() {
@@ -9,7 +9,11 @@ class UserService {
   }
 
   borrowBook(bookId) {
-    return axios.post(API_URL + "/request", { bookid: bookId }, { headers: authHeader() });
+    return axios.post(
+      API_URL + "/request",
+      { bookid: bookId },
+      { headers: authHeader() }
+    );
   }
 
   getHistory() {

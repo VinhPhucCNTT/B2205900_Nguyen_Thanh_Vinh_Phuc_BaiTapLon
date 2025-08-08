@@ -6,17 +6,17 @@ class BBMService {
     this.SACH = client.db().collection("SACH");
     this.NHAXUATBAN = client.db().collection("NHAXUATBAN");
     this.THEODOIMUONSACH = client.db().collection("THEODOIMUONSACH");
-    this.NhanVien = client.db().collection("NHANVIEN");
+    this.NHANVIEN = client.db().collection("NHANVIEN");
     this.DOCGIA = client.db().collection("DOCGIA");
   }
 
   async checkAdminByID(id) {
-    const info = await this.NhanVien.findOne({ _id: new ObjectId(id) });
+    const info = await this.NHANVIEN.findOne({ _id: new ObjectId(id) });
     return !!info;
   }
 
   async checkAdminByPhone(phone) {
-    const info = await this.NhanVien.findOne({ SoDienThoai: phone });
+    const info = await this.NHANVIEN.findOne({ SoDienThoai: phone });
     return !!info;
   }
 
@@ -90,7 +90,7 @@ class BBMService {
 
   // Get an admin info entry by phone number
   async getAdminByPhone(phone) {
-    return await this.NhanVien.findOne({ SoDienThoai: phone });
+    return await this.NHANVIEN.findOne({ SoDienThoai: phone });
   }
 
   // Remove / delete undefined fields in an object
@@ -117,7 +117,7 @@ class BBMService {
   // Insert (or replace existing) an admin info entry
   async createAdmin(adminInfo) {
     const filteredInfo = this.removeUndefined(adminInfo);
-    const result = await this.NhanVien.findOneAndUpdate(
+    const result = await this.NHANVIEN.findOneAndUpdate(
       filteredInfo,
       { $set: { HoTenNV: filteredInfo.HoTenNV } },
       { upsert: true }
@@ -241,7 +241,7 @@ class BBMService {
 
   async listAdmins() {
     // Exclude password from the result
-    return this.NhanVien.find({}, { projection: { Password: 0 } });
+    return this.NHANVIEN.find({}, { projection: { Password: 0 } });
   }
 
   async updateAdmin(adminId, payload) {
@@ -249,7 +249,7 @@ class BBMService {
     // Ensure password is not updated
     delete payload.Password;
     const update = { $set: payload };
-    const result = await this.NhanVien.findOneAndUpdate(filter, update, {
+    const result = await this.NHANVIEN.findOneAndUpdate(filter, update, {
       returnDocument: "after",
       projection: { Password: 0 }, // Exclude password from returned doc
     });
@@ -257,7 +257,7 @@ class BBMService {
   }
 
   async deleteAdmin(adminId) {
-    const result = await this.NhanVien.findOneAndDelete({
+    const result = await this.NHANVIEN.findOneAndDelete({
       _id: new ObjectId(adminId),
     });
     return result.value;
@@ -266,9 +266,9 @@ class BBMService {
   async createNewAdmin(adminInfo) {
     // Hash password before inserting
     adminInfo.Password = bcrypt.hashSync(adminInfo.Password, 8);
-    const result = await this.NhanVien.insertOne(adminInfo);
+    const result = await this.NHANVIEN.insertOne(adminInfo);
     // Return the created admin without the password
-    return await this.NhanVien.findOne(
+    return await this.NHANVIEN.findOne(
       { _id: result.insertedId },
       { projection: { Password: 0 } }
     );

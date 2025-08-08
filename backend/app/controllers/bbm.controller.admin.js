@@ -33,7 +33,6 @@ exports.getAllActiveRequests = async (_req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // Close an ongoing request, book is considered returned
 exports.closeRequest = async (req, res, next) => {
   const { id } = req.params;
@@ -60,7 +59,6 @@ exports.closeRequest = async (req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // List books
 exports.listBooks = async (_req, res, next) => {
   try {
@@ -76,7 +74,6 @@ exports.listBooks = async (_req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // Create a new book
 exports.createBook = async (req, res, next) => {
   const bookInfo = req.body;
@@ -106,11 +103,12 @@ exports.createBook = async (req, res, next) => {
     return res.status(201).send(newBook);
   } catch (error) {
     console.log(error);
-    return next(new ApiError(500, "An error occurred while creating the book."));
+    return next(
+      new ApiError(500, "An error occurred while creating the book.")
+    );
   }
 };
 
-//IMPLEMENT
 // Update an existing book
 exports.updateBook = async (req, res, next) => {
   const { id } = req.params;
@@ -150,7 +148,6 @@ exports.updateBook = async (req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // Delete an existing book
 exports.deleteBook = async (req, res, next) => {
   const { id } = req.params;
@@ -183,7 +180,6 @@ exports.deleteBook = async (req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // List Users
 exports.listUsers = async (_req, res, next) => {
   try {
@@ -197,15 +193,22 @@ exports.listUsers = async (_req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // Create a new normal user
 exports.createUser = async (req, res, next) => {
   const userInfo = req.body;
 
   // Basic validation from schema
-  if (!userInfo.DIENTHOAI || !userInfo.MATKHAU || !userInfo.TEN || !userInfo.HOLOT) {
+  if (
+    !userInfo.DIENTHOAI ||
+    !userInfo.MATKHAU ||
+    !userInfo.TEN ||
+    !userInfo.HOLOT
+  ) {
     return next(
-      new ApiError(400, "Phone, password, first name and last name are required.")
+      new ApiError(
+        400,
+        "Phone, password, first name and last name are required."
+      )
     );
   }
 
@@ -223,11 +226,12 @@ exports.createUser = async (req, res, next) => {
     return res.status(201).send(newUser);
   } catch (error) {
     console.log(error);
-    return next(new ApiError(500, "An error occurred while creating the user."));
+    return next(
+      new ApiError(500, "An error occurred while creating the user.")
+    );
   }
 };
 
-//IMPLEMENT
 // Update an existing user
 exports.updateUser = async (req, res, next) => {
   const { id } = req.params;
@@ -267,7 +271,6 @@ exports.updateUser = async (req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // Delete an existing user
 exports.deleteUser = async (req, res, next) => {
   const { id } = req.params;
@@ -300,7 +303,6 @@ exports.deleteUser = async (req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // List Admins
 exports.listAdmins = async (_req, res, next) => {
   try {
@@ -314,7 +316,6 @@ exports.listAdmins = async (_req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // Update an existing admin user's information (not password)
 exports.updateAdmin = async (req, res, next) => {
   const { id } = req.params;
@@ -356,7 +357,6 @@ exports.updateAdmin = async (req, res, next) => {
   }
 };
 
-//IMPLEMENT
 // Delete an existing admin user
 exports.deleteAdmin = async (req, res, next) => {
   const { id } = req.params;
